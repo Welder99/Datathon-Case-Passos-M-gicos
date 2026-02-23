@@ -1,0 +1,16 @@
+# Ambientes Virtuais
+venv/
+.env
+
+# Cache do Python e Pytest
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dados e Modelos (Geralmente não subimos bases brutas por privacidade/tamanho)
+data/dados_limpos.csv
+model/*.joblib
+
+# Sistema
+.DS_Store
