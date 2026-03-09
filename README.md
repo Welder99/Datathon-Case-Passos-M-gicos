@@ -1,135 +1,105 @@
 🚀 Datathon: Case Passos Mágicos - Risco de Defasagem Escolar
+🔗 Link da API em Produção
+Acesse a documentação interativa (Swagger) da solução hospedada:
+👉 https://datathon-case-passos-m-gicos.onrender.com/docs
+
 1. Visão Geral do Projeto
-Objetivo: Este projeto faz parte da conclusão da Pós-Graduação em Machine Learning Engineering. O objetivo é desenvolver um modelo preditivo capaz de estimar o risco de defasagem escolar de cada estudante da Associação Passos Mágicos, utilizando dados educacionais reais dos períodos de 2022, 2023 e 2024.
-+1
+Objetivo: Este projeto foi desenvolvido para a conclusão da Pós-Graduação em Machine Learning Engineering. O foco é fornecer à Associação Passos Mágicos uma ferramenta preditiva capaz de identificar estudantes em risco de defasagem escolar, utilizando dados históricos de 2022, 2023 e 2024.
 
-
-Solução Proposta: Foi construída uma pipeline completa de Machine Learning, aplicando as melhores práticas de MLOps. A solução abrange desde o pré-processamento de dados até o deploy de uma API robusta, garantindo escalabilidade e monitoramento contínuo.
-+2
+Solução Proposta: Uma pipeline de MLOps de ponta a ponta que transforma dados brutos em inteligência acionável. A solução prioriza o Recall, garantindo que o máximo de alunos em risco seja identificado para intervenção pedagógica precoce.
 
 Stack Tecnológica:
+Linguagem: Python 3.12
 
+Machine Learning: scikit-learn, pandas, numpy, joblib
 
-Linguagem: Python 3.12 
+API & Servidor: FastAPI, Uvicorn
 
+Qualidade: Pytest, Pytest-cov (89% de cobertura)
 
-Bibliotecas ML: scikit-learn, pandas, numpy 
+DevOps: Docker, Render (Cloud Deploy)
 
+Monitoramento: Evidently AI (Análise de Data Drift)
 
-API: FastAPI 
-
-
-Serialização: joblib 
-
-
-Testes Automatizados: pytest & pytest-cov 
-+1
-
-
-Empacotamento: Docker 
-
-
-Monitoramento: Evidently AI & Logging 
-+1
-
-2. Estrutura do Projeto 
-
+2. Estrutura do Projeto
 Plaintext
 project-root/
-├── app/                      # Código-fonte da API [cite: 54]
-│   ├── main.py               # Inicialização do FastAPI
-│   └── routes.py             # Definição de endpoints e schemas
-├── data/                     # Armazenamento da base de dados bruta e processada
-├── model/                    # Modelos serializados (.joblib) [cite: 54]
-├── notebooks/                # Jupyter Notebooks para análise exploratória (EDA) [cite: 54]
-├── src/                      # Pipeline de Machine Learning [cite: 54]
-│   ├── preprocessing.py      # Limpeza e padronização (Multi-aba Excel)
-│   ├── feature_engineering.py# Criação de atributos acadêmicos
-│   ├── train.py              # Script de treinamento e validação
-│   ├── evaluate.py           # Cálculo de métricas e relatórios
-│   ├── utils.py              # Funções auxiliares e loggers
-│   └── monitor.py            # Geração de relatórios de Data Drift
-├── tests/                    # Testes unitários (Mínimo 80% de cobertura) [cite: 34, 54]
-├── Dockerfile                # Configuração para empacotamento da aplicação [cite: 29, 54]
-├── requirements.txt          # Dependências do projeto [cite: 54, 60]
-└── README.md                 # Documentação principal
-3. Instruções de Execução e Deploy 
+├── app/                      # Camada de entrega: API FastAPI
+│   ├── main.py               # Ponto de entrada do servidor
+│   └── routes.py             # Endpoints, Schemas e lógica de predição
+├── data/                     # Dados brutos (Excel) e processados (CSV)
+├── model/                    # Modelos serializados (.joblib)
+├── notebooks/                # Análise Exploratória (EDA) e Insights
+├── src/                      # Core da Pipeline de ML
+│   ├── preprocessing.py      # Padronização de dados históricos
+│   ├── feature_engineering.py# Criação de indicadores de engajamento
+│   ├── train.py              # Treino com Divisão Temporal
+│   ├── evaluate.py           # Métricas de performance
+│   ├── monitor.py            # Monitoramento de Drift
+│   └── utils.py              # Loggers e funções auxiliares
+├── tests/                    # Testes automatizados (Unitários e Integração)
+├── Dockerfile                # Empacotamento profissional (Multi-layer)
+└── requirements.txt          # Gestão de dependências
+3. Instruções de Execução
+Localmente (Ambiente Virtual)
+python -m venv venv
 
-Pré-requisitos:
+source venv/bin/activate (Linux/Mac) ou .\venv\Scripts\activate (Windows)
 
-Python 3.12 instalado ou Docker.
+pip install -r requirements.txt
 
-Instalação e Treinamento:
-Criar ambiente virtual: python -m venv venv
+python src/train.py (Para gerar o modelo)
 
-Ativar venv: venv\Scripts\activate (Windows) ou source venv/bin/activate (Linux/Mac)
+python -m uvicorn app.main:app --reload
 
-
-Instalar dependências: pip install -r requirements.txt 
-
-Processar dados e Treinar:
-
-
-python src/preprocessing.py 
-
-
-python src/train.py 
-
-Execução via Docker:
-+1
-
-Build da imagem:
+Via Docker (Recomendado para Avaliação)
+A solução está configurada com PYTHONPATH dinâmico para evitar erros de importação:
 
 Bash
+# Build da imagem
 docker build -t passos-magicos-api .
-Rodar o container:
 
-Bash
+# Execução do container
 docker run -d -p 8000:8000 --name api-pm passos-magicos-api
-4. Testes e Qualidade 
+Acesse: http://localhost:8000/docs
 
-Para garantir a confiabilidade do modelo e do código, foram implementados testes unitários com foco em lógica de negócio e processamento de dados.
+4. Testes e Qualidade
+O projeto adota uma postura rigorosa de QA, garantindo que alterações na pipeline não degradem o modelo ou a API.
 
-Comando: pytest --cov=app --cov=src --cov-report=term-missing
+Comando: python -m pytest --cov=app --cov=src --cov-report=term-missing
 
-Resultado Obtido: 89% de cobertura de código.
+Resultado: 89% de cobertura de código.
 
-5. Exemplo de Chamada à API 
+5. Pipeline e Estratégia de ML
+Pré-processamento: Tratamento de dados de múltiplas abas Excel, normalização de nomes de colunas e criação da variável alvo baseada em anos de defasagem.
 
-A API fornece documentação automática via Swagger em http://localhost:8000/docs.
+Engenharia de Features: Criação de colunas sintéticas como Media_Notas e Alerta_Engajamento, cruzando dados acadêmicos com indicadores comportamentais (IEG/IDA).
 
+Seleção de Modelo: Random Forest Classifier com pesos balanceados.
 
-Requisição (POST /predict):
+Justificativa da Métrica: O modelo foi otimizado para Recall. No contexto social, o "Falso Negativo" (não detectar um aluno que precisa de ajuda) é mais prejudicial que o "Falso Positivo".
+
+6. Exemplo de Uso (API)
+Endpoint: POST /predict
+
+Input:
 
 JSON
 {
-  "Fase": "Fase 1 (3º e 4º ano)",
-  "Idade": 12.0,
-  "Gênero": "Masculino",
-  "IAA": 8.5,
-  "IEG": 9.0,
-  "Mat": 7.0,
-  "Por": 8.0
+  "Fase": "Fase 2",
+  "Idade": 14.0,
+  "Gênero": "Feminino",
+  "IAA": 7.5,
+  "IEG": 4.0,
+  "Mat": 5.5,
+  "Por": 6.0
 }
-
-Resposta:
+Output:
 
 JSON
 {
-  "risco_defasagem": false,
-  "probabilidade_risco": 0.1245,
-  "mensagem_alerta": "BAIXO risco de defasagem.",
+  "risco_defasagem": true,
+  "probabilidade_risco": 0.82,
+  "mensagem_alerta": "ALTO risco detectado. Recomenda-se atenção pedagógica.",
   "status": "success"
 }
-6. Pipeline de Machine Learning 
-
-
-Pré-processamento: Unificação de abas históricas, padronização de nomenclatura de colunas e criação do target binário (Risco_Defasagem).
-
-
-Engenharia de Features: Cálculo de médias acadêmicas, indicadores comportamentais e detecção de discrepâncias entre notas e indicadores IDA.
-
-Treinamento: Divisão temporal (Treino: 2022/2023; Teste: 2024). Uso de Random Forest com pesos balanceados para otimização de Recall.
-
-
-Monitoramento: Integração com Evidently AI para detecção de Data Drift, garantindo que o modelo seja recalibrado caso os padrões dos alunos mudem drasticamente
